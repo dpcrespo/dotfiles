@@ -33,12 +33,38 @@ if ! command -v chezmoi &> /dev/null; then
     brew install chezmoi
 fi
 
-# 3. Initialize and apply dotfiles
+# 3. Linux-specific: Install Kitty and Nerd Font
+if [ "$OS" = "Linux" ]; then
+    # Install Kitty terminal
+    if ! command -v kitty &> /dev/null; then
+        echo "==> Installing Kitty terminal..."
+        curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n
+        mkdir -p ~/.local/bin
+        ln -sf ~/.local/kitty.app/bin/kitty ~/.local/bin/
+        ln -sf ~/.local/kitty.app/bin/kitten ~/.local/bin/
+        # Desktop integration
+        mkdir -p ~/.local/share/applications
+        cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
+        sed -i "s|Icon=kitty|Icon=$HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty.desktop
+    fi
+
+    # Install Nerd Font
+    if ! fc-list | grep -qi "iosevka"; then
+        echo "==> Installing IosevkaTerm Nerd Font..."
+        mkdir -p ~/.local/share/fonts
+        cd /tmp
+        curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/IosevkaTerm.tar.xz
+        tar -xf IosevkaTerm.tar.xz -C ~/.local/share/fonts
+        fc-cache -fv
+        cd -
+    fi
+fi
+
+# 4. Initialize and apply dotfiles
 echo "==> Applying dotfiles..."
-# Replace 'dpcrespo' with your GitHub username
 chezmoi init --apply "https://github.com/dpcrespo/dotfiles.git"
 
-# 4. Configure Fish as default shell
+# 5. Configure Fish as default shell
 FISH_PATH="$(which fish)"
 if [ -n "$FISH_PATH" ]; then
     if ! grep -q "$FISH_PATH" /etc/shells; then
