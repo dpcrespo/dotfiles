@@ -1,5 +1,13 @@
-# Shell - let Kitty find fish in PATH
-shell fish
+# Shell configuration - use Homebrew path
+{{ if eq .chezmoi.os "darwin" -}}
+{{ if eq .chezmoi.arch "arm64" -}}
+shell /opt/homebrew/bin/fish
+{{- else -}}
+shell /usr/local/bin/fish
+{{- end }}
+{{- else -}}
+shell /home/linuxbrew/.linuxbrew/bin/fish
+{{- end }}
 
 include ./kanagawa.conf
 
