@@ -1,0 +1,37 @@
+#!/bin/bash
+set -e
+
+echo "==> Setting up runtimes with mise..."
+
+# Detect Homebrew prefix
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+if [ "$OS" = "Darwin" ]; then
+    [ "$ARCH" = "arm64" ] && HOMEBREW_PREFIX="/opt/homebrew" || HOMEBREW_PREFIX="/usr/local"
+else
+    HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+fi
+
+# Ensure brew is in PATH
+eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
+
+# Install Node.js and Yarn with mise
+if command -v mise &> /dev/null; then
+    echo "==> Installing Node.js and Yarn with mise..."
+    mise install node@20.9.0
+    mise install yarn@latest
+    mise use --global node@20.9.0
+    mise use --global yarn@latest
+fi
+
+# Install global npm packages (for Neovim LSPs)
+if command -v npm &> /dev/null; then
+    echo "==> Installing LSPs and formatters..."
+    npm install -g typescript
+    npm install -g typescript-language-server
+    npm install -g @fsouza/prettierd
+    npm install -g eslint_d
+    npm install -g vscode-langservers-extracted
+fi
+
+echo "==> Runtimes configured successfully!"

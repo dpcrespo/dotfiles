@@ -1,0 +1,32 @@
+#!/bin/bash
+set -e
+
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+
+echo "==> Installing packages via Homebrew..."
+
+# Detect OS and architecture
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+
+# Configure Homebrew prefix
+if [ "$OS" = "Darwin" ]; then
+    [ "$ARCH" = "arm64" ] && HOMEBREW_PREFIX="/opt/homebrew" || HOMEBREW_PREFIX="/usr/local"
+else
+    HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+fi
+
+# Install Homebrew if not present
+if ! command -v brew &> /dev/null; then
+    echo "==> Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
+fi
+
+# Ensure brew is in PATH
+eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
+
+# Install packages from Brewfile
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile"
+
+echo "==> Packages installed successfully!"

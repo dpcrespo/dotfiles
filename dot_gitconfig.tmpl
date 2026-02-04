@@ -1,0 +1,21 @@
+[user]
+	name = Daniel Pérez
+	email = {{ .email }}
+[alias]
+	st = status -sb
+	ll = log --oneline
+	last = log -1 HEAD --stat
+	cm = commit -m
+	d = diff
+	dv = difftool -t vimdiff -y
+	gl = config --global -l
+	se = !git rev-list --all | xargs git grep -F
+	co = checkout
+	del = branch -D
+	cob = checkout -b
+	br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
+	undo = reset HEAD~1 --mixed
+	res = !git reset --hard
+	ac = git add -A && git comit -m
+[help]
+	autocorrect = 20

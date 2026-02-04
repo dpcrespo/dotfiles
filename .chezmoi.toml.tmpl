@@ -1,0 +1,6 @@
+{{- $email := promptStringOnce . "email" "Git email (personal)" -}}
+{{- $timezone := promptStringOnce . "timezone" "Timezone" "Europe/Berlin" -}}
+
+[data]
+    email = {{ $email | quote }}
+    timezone = {{ $timezone | quote }}
