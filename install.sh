@@ -55,7 +55,7 @@ if [ "$OS" = "Linux" ]; then
         cd /tmp
         curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/IosevkaTerm.tar.xz
         tar -xf IosevkaTerm.tar.xz -C ~/.local/share/fonts
-        fc-cache -fv
+        fc-cache -fv || true  # May fail on some systems, but font is installed
         cd -
     fi
 fi
