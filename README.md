@@ -2,24 +2,93 @@
 
 Personal development environment configuration managed with [Chezmoi](https://www.chezmoi.io/).
 
-## Quick Install (New Machine)
+## Pre-requisites
+
+Before running the install script, ensure your system has the required dependencies.
+
+### macOS
+
+```bash
+# Install Xcode Command Line Tools (includes git, curl, etc.)
+xcode-select --install
+```
+
+### Ubuntu / Debian
+
+```bash
+# Install build dependencies required by Homebrew
+sudo apt update
+sudo apt install -y build-essential curl file git
+```
+
+### Fedora / RHEL
+
+```bash
+# Install build dependencies
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y curl file git procps-ng
+```
+
+### Arch Linux
+
+```bash
+# Install base development tools
+sudo pacman -S --needed base-devel curl file git
+```
+
+---
+
+## Quick Install
+
+Once pre-requisites are installed, run:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/dpcrespo/dotfiles/main/install.sh | bash
 ```
 
-Or manually:
+The script will:
+1. Install Homebrew (if not present)
+2. Install all packages from Brewfile
+3. Apply dotfiles via Chezmoi
+4. Set Fish as default shell
+5. Install Node.js, Yarn, and LSPs via mise
+
+### Manual Install
 
 ```bash
-# Install Homebrew
+# 1. Install Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Install Chezmoi
+# 2. Add Homebrew to PATH (Linux only)
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# 3. Install Chezmoi
 brew install chezmoi
 
-# Apply dotfiles
+# 4. Apply dotfiles
 chezmoi init --apply https://github.com/dpcrespo/dotfiles.git
 ```
+
+---
+
+## Post-Install
+
+### Set up NPM token (optional)
+
+If you use private NPM registries:
+
+```bash
+echo "your-npm-token" > ~/.npm_token
+chmod 600 ~/.npm_token
+```
+
+### Restart terminal
+
+```bash
+exec fish
+```
+
+---
 
 ## What's Included
 
@@ -47,6 +116,8 @@ chezmoi init --apply https://github.com/dpcrespo/dotfiles.git
 ### Theme
 - **Kanagawa** - Consistent across Neovim, Kitty, and Zellij
 
+---
+
 ## Directory Structure
 
 ```
@@ -67,6 +138,8 @@ chezmoi init --apply https://github.com/dpcrespo/dotfiles.git
     └── mise/                   # Runtime versions
 ```
 
+---
+
 ## Templates
 
 Some files are templated for OS/arch differences:
@@ -78,17 +151,7 @@ Some files are templated for OS/arch differences:
 | `zellij/layouts/work.kdl` | Timezone |
 | `.gitconfig` | Email |
 
-## Secrets
-
-**Never committed to the repo:**
-
-- `~/.npm_token` - NPM authentication token
-
-After install, create manually:
-```bash
-echo "your-npm-token" > ~/.npm_token
-chmod 600 ~/.npm_token
-```
+---
 
 ## Usage
 
@@ -117,6 +180,8 @@ chezmoi apply
 chezmoi diff
 ```
 
+---
+
 ## Fish Functions
 
 | Function | Description |
@@ -128,6 +193,8 @@ chezmoi diff
 | `zls` | List zellij sessions |
 | `t [filter]` | Run tests (vitest/jest) |
 | `tw [filter]` | Run tests in watch mode |
+
+---
 
 ## License
 
