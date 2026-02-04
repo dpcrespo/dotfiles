@@ -9,39 +9,6 @@ echo ""
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
-# Backup existing configs
-BACKUP_DIR="$HOME/.config-backup-$(date +%Y%m%d-%H%M%S)"
-CONFIGS_TO_BACKUP=(
-    "$HOME/.config/nvim"
-    "$HOME/.config/fish"
-    "$HOME/.config/kitty"
-    "$HOME/.config/zellij"
-    "$HOME/.config/yazi"
-    "$HOME/.config/atuin"
-    "$HOME/.config/mise"
-    "$HOME/.gitconfig"
-)
-
-backup_needed=false
-for config in "${CONFIGS_TO_BACKUP[@]}"; do
-    if [ -e "$config" ]; then
-        backup_needed=true
-        break
-    fi
-done
-
-if [ "$backup_needed" = true ]; then
-    echo "==> Existing configs found. Creating backup at $BACKUP_DIR"
-    mkdir -p "$BACKUP_DIR"
-    for config in "${CONFIGS_TO_BACKUP[@]}"; do
-        if [ -e "$config" ]; then
-            cp -r "$config" "$BACKUP_DIR/" 2>/dev/null || true
-            echo "    Backed up: $config"
-        fi
-    done
-    echo ""
-fi
-
 echo "==> Detected: $OS ($ARCH)"
 
 # Configure Homebrew prefix based on OS/arch
