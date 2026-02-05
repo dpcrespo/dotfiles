@@ -1,6 +1,6 @@
 function workon --description "Project sessionizer - switch between projects with fzf and zellij"
     set -l project_name $argv[1]
-    set -l projects_dir ~/projects
+    set -l projects_dir {{ .projects_dir }}
 
     if test -z "$project_name"
         # No argument - show fzf picker with zoxide frecency boost

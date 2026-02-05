@@ -1,6 +1,8 @@
 {{- $email := promptStringOnce . "email" "Git email (personal)" -}}
 {{- $timezone := promptStringOnce . "timezone" "Timezone" "Europe/Berlin" -}}
+{{- $projects_dir := promptStringOnce . "projects_dir" "Projects directory" "~/projects" -}}
 
 [data]
     email = {{ $email | quote }}
     timezone = {{ $timezone | quote }}
+    projects_dir = {{ $projects_dir | quote }}
