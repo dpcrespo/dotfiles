@@ -43,15 +43,16 @@ sudo pacman -S --needed base-devel curl file git
 Once pre-requisites are installed, run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/dpcrespo/dotfiles/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/dpcrespo/dotfiles/master/install.sh | bash
 ```
 
 The script will:
 1. Install Homebrew (if not present)
-2. Install all packages from Brewfile
-3. Apply dotfiles via Chezmoi
-4. Set Fish as default shell
-5. Install Node.js, Yarn, and LSPs via mise
+2. Install Kitty terminal and Nerd Fonts (Linux)
+3. Install all packages from Brewfile
+4. Apply dotfiles via Chezmoi
+5. Set Fish as default shell
+6. Install Node.js, Yarn, and LSPs via mise
 
 ### Manual Install
 
@@ -67,6 +68,43 @@ brew install chezmoi
 
 # 4. Apply dotfiles
 chezmoi init --apply https://github.com/dpcrespo/dotfiles.git
+```
+
+---
+
+## Configuration
+
+During installation, Chezmoi will prompt for the following settings:
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| `email` | Git email for commits | *(required)* |
+| `timezone` | Timezone for zellij status bar | `Europe/Berlin` |
+| `projects_dir` | Directory for your projects (used by `workon`) | `~/projects` |
+
+Example prompts:
+```
+? Git email (personal): daniel@example.com
+? Timezone [Europe/Berlin]: America/New_York
+? Projects directory [~/projects]: ~/dev
+```
+
+### Change settings later
+
+```bash
+# Edit configuration
+chezmoi edit-config
+
+# Re-apply with new settings
+chezmoi apply
+```
+
+Example `~/.config/chezmoi/chezmoi.toml`:
+```toml
+[data]
+    email = "daniel@example.com"
+    timezone = "Europe/Berlin"
+    projects_dir = "~/projects"
 ```
 
 ---
@@ -87,6 +125,23 @@ chmod 600 ~/.npm_token
 ```bash
 exec fish
 ```
+
+---
+
+## Uninstall
+
+To remove dotfiles and optionally Homebrew packages:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/dpcrespo/dotfiles/master/uninstall.sh | bash
+```
+
+The script is interactive and will ask before removing:
+- Config directories (nvim, fish, kitty, zellij, etc.)
+- Kitty local install and Nerd Fonts
+- Mise data (Node/Yarn versions)
+- Homebrew packages
+- Homebrew itself
 
 ---
 
@@ -122,11 +177,12 @@ exec fish
 
 ```
 ~/.local/share/chezmoi/
-├── .chezmoi.toml.tmpl          # User config (email, timezone)
+├── .chezmoi.toml.tmpl          # User config prompts
 ├── .chezmoiexternal.toml       # External files (zjstatus.wasm)
 ├── .chezmoiscripts/            # Install scripts
 ├── Brewfile                    # Homebrew packages
 ├── install.sh                  # Bootstrap script
+├── uninstall.sh                # Uninstall script
 ├── dot_gitconfig.tmpl          # Git config template
 └── private_dot_config/
     ├── nvim/                   # Neovim config
@@ -142,14 +198,15 @@ exec fish
 
 ## Templates
 
-Some files are templated for OS/arch differences:
+Some files are templated for OS/arch/user differences:
 
 | File | Template Variables |
 |------|-------------------|
-| `fish/config.fish` | OS-specific paths (`/opt/nvim/bin` on Linux) |
-| `kitty/kitty.conf` | Shell path (fish location varies by OS) |
-| `zellij/layouts/work.kdl` | Timezone |
-| `.gitconfig` | Email |
+| `fish/config.fish` | OS-specific Homebrew paths |
+| `fish/functions/workon.fish` | `projects_dir` |
+| `kitty/kitty.conf` | OS-specific fish path |
+| `zellij/layouts/work.kdl` | `timezone` |
+| `.gitconfig` | `email` |
 
 ---
 
