@@ -47,9 +47,24 @@ if type -q starship
     starship init fish | source
 end
 
+# Node version manager
+{{ if eq .node_manager "mise" -}}
 if type -q mise
     mise activate fish | source
 end
+{{- else if eq .node_manager "volta" -}}
+set -gx VOLTA_HOME "$HOME/.volta"
+fish_add_path $VOLTA_HOME/bin
+{{- else if eq .node_manager "nvm" -}}
+# nvm for fish - using bass or nvm.fish
+if test -d "$HOME/.nvm"
+    set -gx NVM_DIR "$HOME/.nvm"
+    # Load nvm if bass is available (allows running bash scripts)
+    if type -q bass
+        bass source "$NVM_DIR/nvm.sh"
+    end
+end
+{{- end }}
 
 # Aliases
 alias lg="lazygit"
