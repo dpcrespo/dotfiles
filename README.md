@@ -81,12 +81,23 @@ During installation, Chezmoi will prompt for the following settings:
 | `email` | Git email for commits | *(required)* |
 | `timezone` | Timezone for zellij status bar | `Europe/Berlin` |
 | `projects_dir` | Directory for your projects (used by `workon`) | `~/projects` |
+| `node_manager` | Node.js version manager | `mise` |
+
+### Node version manager options
+
+| Option | Description |
+|--------|-------------|
+| `mise` | Modern, fast polyglot runtime manager (recommended) |
+| `volta` | JavaScript tool manager, great for teams |
+| `nvm` | Node Version Manager, most popular |
+| `none` | Skip installation, use existing setup |
 
 Example prompts:
 ```
 ? Git email (personal): daniel@example.com
 ? Timezone [Europe/Berlin]: America/New_York
 ? Projects directory [~/projects]: ~/dev
+? Node version manager [mise, volta, nvm, none]: volta
 ```
 
 ### Change settings later
@@ -105,6 +116,7 @@ Example `~/.config/chezmoi/chezmoi.toml`:
     email = "daniel@example.com"
     timezone = "Europe/Berlin"
     projects_dir = "~/projects"
+    node_manager = "mise"
 ```
 
 ---
