@@ -10,6 +10,10 @@ return {
       "prettier",
       "lua-language-server",
       "json-lsp",
+      "intelephense",
+      "phpactor",
+      "php-debug-adapter",
+      "phpstan",
     },
   },
 }

@@ -42,7 +42,19 @@
       "Bash(chezmoi:*)",
       "Bash(brew install:*)",
       "Bash(~/.local/bin/chezmoi init:*)",
-      "Bash(~/.local/bin/chezmoi add:*)"
+      "Bash(~/.local/bin/chezmoi add:*)",
+      "Bash(chmod:*)",
+      "Bash(~/.local/bin/chezmoi diff:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nInitial dotfiles setup with chezmoi\n\nIncludes:\n- Fish shell config with vi keybindings, atuin, starship, zoxide\n- Neovim config for TypeScript/JavaScript development\n- Kitty terminal with Kanagawa theme\n- Zellij multiplexor with custom layouts \\(work, claude\\)\n- Yazi file manager, Atuin history, Mise runtime manager\n- Git config with aliases\n- Brewfile for package management\n- Bootstrap install.sh script for new machines\n\nTemplates for OS-specific paths and user-specific data \\(email, timezone\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(gh auth:*)",
+      "Bash(ssh:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git revert:*)",
+      "Bash(curl:*)",
+      "Bash(brew search:*)",
+      "WebFetch(domain:gist.github.com)"
     ]
   }
 }

@@ -1,3 +1,15 @@
+-- PHP indentation (cindent for C-style languages)
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("php-indent", { clear = true }),
+    pattern = "php",
+    callback = function()
+        vim.opt_local.cindent = true
+        vim.opt_local.shiftwidth = 4
+        vim.opt_local.tabstop = 4
+        vim.opt_local.softtabstop = 4
+    end,
+})
+
 -- Auto-reload files when changed externally (e.g., by Claude Code)
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
     group = vim.api.nvim_create_augroup("autoreload", { clear = true }),
@@ -65,6 +77,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("gl", vim.diagnostic.open_float, "Open Diagnostic Float")
         map("K", vim.lsp.buf.hover, "Hover Documentation")
         map("gs", vim.lsp.buf.signature_help, "Signature Documentation")
+        map("gd", function() Snacks.picker.lsp_definitions() end, "Goto Definition")
+        map("gi", function() Snacks.picker.lsp_implementations() end, "Goto Implementation (Port -> Adapter)")
+        map("gr", function() Snacks.picker.lsp_references() end, "Find References")
+        map("gy", function() Snacks.picker.lsp_type_definitions() end, "Goto Type Definition")
         map("gD", vim.lsp.buf.declaration, "Goto Declaration")
         map("<leader>la", vim.lsp.buf.code_action, "Code Action")
         map("<leader>lr", vim.lsp.buf.rename, "Rename all references")

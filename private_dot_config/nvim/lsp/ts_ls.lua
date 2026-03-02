@@ -1,6 +1,17 @@
 local blink = require('blink.cmp')
 return {
-  init_options = { hostInfo = 'neovim' },
+  init_options = {
+    hostInfo = 'neovim',
+    preferences = {
+      autoImportFileExcludePatterns = {
+        'node_modules/@adsmurai/design-system-react/lib/index.d.ts',
+      },
+    },
+    tsserver = {
+      logVerbosity = 'verbose',
+      logDirectory = '/tmp/tsserver-logs',
+    },
+  },
   cmd = { 'typescript-language-server', '--stdio' },
   filetypes = {
     'javascript',

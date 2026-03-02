@@ -1,9 +1,9 @@
 function zkill --description "Kill zellij session"
     if test (count $argv) -eq 0
-        echo "Available sessions:"
+        echo "Sessions disponibles:"
         zellij list-sessions
         return
     end
     zellij delete-session $argv[1]
-    echo "Session '$argv[1]' killed"
+    echo "Sesión '$argv[1]' eliminada"
 end

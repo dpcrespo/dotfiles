@@ -5,6 +5,7 @@ return {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
     "marilari88/neotest-vitest",
+    "V13Axel/neotest-pest",
   },
   keys = {
     {
@@ -75,6 +76,9 @@ return {
     require("neotest").setup({
       adapters = {
         require("neotest-vitest"),
+        require("neotest-pest")({
+          pest_cmd = "vendor/bin/pest",
+        }),
       },
       status = {
         virtual_text = true,

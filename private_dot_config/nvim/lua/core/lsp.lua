@@ -4,6 +4,8 @@ vim.lsp.enable({
   "eslint_lsp",
   "stylelint_lsp",
   "jsonls",
+  "intelephense",
+  "phpactor",
 })
 
 vim.diagnostic.config({

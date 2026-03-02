@@ -9,6 +9,11 @@ return {
       topdelete = { text = "‾" },
       changedelete = { text = "~" },
     },
+    current_line_blame = true,
+    current_line_blame_opts = {
+      delay = 500,
+      virt_text_pos = "eol",
+    },
     on_attach = function(bufnr)
       local gs = package.loaded.gitsigns
 

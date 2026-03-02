@@ -34,11 +34,6 @@ brew "tree-sitter"    # Parser para syntax
 brew "luarocks"       # Lua dependencies
 
 # ══════════════════════════════════════════
-# GESTOR DE VERSIONES
-# ══════════════════════════════════════════
-brew "mise"           # Gestor de Node/Yarn
-
-# ══════════════════════════════════════════
 # FORMATTERS Y LINTERS (Neovim deps)
 # ══════════════════════════════════════════
 brew "stylua"         # Lua formatter

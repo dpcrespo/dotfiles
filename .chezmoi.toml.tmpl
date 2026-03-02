@@ -2,9 +2,11 @@
 {{- $timezone := promptStringOnce . "timezone" "Timezone" "Europe/Berlin" -}}
 {{- $projects_dir := promptStringOnce . "projects_dir" "Projects directory" "~/projects" -}}
 {{- $node_manager := promptChoiceOnce . "node_manager" "Node version manager" (list "mise" "volta" "nvm" "none") -}}
+{{- $dashboard_brand := promptStringOnce . "dashboard_brand" "Neovim dashboard brand/name" "SPINBOO" -}}
 
 [data]
     email = {{ $email | quote }}
     timezone = {{ $timezone | quote }}
     projects_dir = {{ $projects_dir | quote }}
     node_manager = {{ $node_manager | quote }}
+    dashboard_brand = {{ $dashboard_brand | quote }}

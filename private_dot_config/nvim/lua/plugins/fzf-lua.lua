@@ -8,10 +8,10 @@ return {
     
     fzf_lua.setup({
       files = {
-        fd_opts = "--color=never --type f --hidden --follow --exclude .git",
+        fd_opts = "--color=never --type f --hidden --follow --exclude .git --exclude vendor --exclude node_modules",
       },
       grep = {
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git'",
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden --glob '!.git' --glob '!vendor' --glob '!node_modules'",
       },
       -- Configuración básica
       fzf_opts = {

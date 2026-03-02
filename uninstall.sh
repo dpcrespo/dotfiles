@@ -44,6 +44,7 @@ echo "  - Git config (~/.gitconfig)"
 echo "  - Chezmoi directory (~/.local/share/chezmoi)"
 echo "  - Kitty local install (~/.local/kitty.app)"
 echo "  - Nerd Fonts from ~/.local/share/fonts"
+echo "  - Node version manager data (mise, volta, nvm) - you'll be asked individually"
 echo ""
 
 if ! ask "Continue with uninstall?"; then
@@ -113,8 +114,11 @@ if [ -d "$HOME/.local/share/fonts" ]; then
     echo -e "${GREEN}    Removed Iosevka Nerd Fonts${NC}"
 fi
 
-# 6. Remove mise shims and data
+# 6. Remove Node version manager data
 echo ""
+echo -e "${YELLOW}==> Node version manager data...${NC}"
+
+# Mise
 if [ -d "$HOME/.local/share/mise" ]; then
     if ask "Remove mise data (Node/Yarn versions installed by mise)?"; then
         rm -rf "$HOME/.local/share/mise"
@@ -126,6 +130,26 @@ if [ -d "$HOME/.local/share/mise" ]; then
     fi
 fi
 
+# Volta
+if [ -d "$HOME/.volta" ]; then
+    if ask "Remove Volta data (~/.volta)?"; then
+        rm -rf "$HOME/.volta"
+        echo -e "${GREEN}    Removed Volta data${NC}"
+    else
+        echo -e "${YELLOW}    Kept Volta data${NC}"
+    fi
+fi
+
+# NVM
+if [ -d "$HOME/.nvm" ]; then
+    if ask "Remove NVM data (~/.nvm)?"; then
+        rm -rf "$HOME/.nvm"
+        echo -e "${GREEN}    Removed NVM data${NC}"
+    else
+        echo -e "${YELLOW}    Kept NVM data${NC}"
+    fi
+fi
+
 # 7. Homebrew packages (optional)
 echo ""
 if command -v brew &> /dev/null; then
@@ -134,9 +158,11 @@ if command -v brew &> /dev/null; then
     echo "The following packages were installed by the dotfiles Brewfile:"
     echo "  fish, starship, atuin, zellij, zoxide, fzf, ripgrep, fd, yazi,"
     echo "  bat, eza, tree, git, lazygit, gh, delta, neovim, tree-sitter,"
-    echo "  luarocks, mise, stylua, prettier, eslint, shfmt, file, unar,"
+    echo "  luarocks, stylua, prettier, eslint, shfmt, file, unar,"
     echo "  poppler, ffmpegthumbnailer, imagemagick, jq, yq, curl, wget,"
     echo "  htop, lazydocker, direnv"
+    echo ""
+    echo "Node version managers (if installed via brew): mise, volta"
     echo ""
 
     if ask "Uninstall these Homebrew packages?"; then
@@ -145,9 +171,10 @@ if command -v brew &> /dev/null; then
         BREW_PACKAGES=(
             fish starship atuin zellij zoxide fzf ripgrep fd yazi
             bat eza tree lazygit gh delta neovim tree-sitter
-            luarocks mise stylua prettier eslint shfmt file unar
+            luarocks stylua prettier eslint shfmt file unar
             poppler ffmpegthumbnailer imagemagick jq yq
             htop lazydocker direnv
+            mise volta
         )
 
         for pkg in "${BREW_PACKAGES[@]}"; do

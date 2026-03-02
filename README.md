@@ -82,6 +82,7 @@ During installation, Chezmoi will prompt for the following settings:
 | `timezone` | Timezone for zellij status bar | `Europe/Berlin` |
 | `projects_dir` | Directory for your projects (used by `workon`) | `~/projects` |
 | `node_manager` | Node.js version manager | `mise` |
+| `dashboard_brand` | Brand/name shown in Neovim dashboard | `SPINBOO` |
 
 ### Node version manager options
 
@@ -98,6 +99,7 @@ Example prompts:
 ? Timezone [Europe/Berlin]: America/New_York
 ? Projects directory [~/projects]: ~/dev
 ? Node version manager [mise, volta, nvm, none]: volta
+? Neovim dashboard brand/name [SPINBOO]: MyBrand
 ```
 
 ### Change settings later
@@ -117,6 +119,7 @@ Example `~/.config/chezmoi/chezmoi.toml`:
     timezone = "Europe/Berlin"
     projects_dir = "~/projects"
     node_manager = "mise"
+    dashboard_brand = "SPINBOO"
 ```
 
 ---
