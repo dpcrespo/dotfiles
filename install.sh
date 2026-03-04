@@ -33,30 +33,64 @@ if ! command -v chezmoi &> /dev/null; then
     brew install chezmoi
 fi
 
-# 3. Linux-specific: Install Kitty and Nerd Font
+# 3. Linux-specific: Install system deps, Kitty and Nerd Font
 if [ "$OS" = "Linux" ]; then
+    # Install system dependencies needed by Kitty and Homebrew
+    if command -v apt-get &> /dev/null; then
+        echo "==> Installing system dependencies (apt)..."
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq \
+            build-essential curl file git \
+            libgl1 libxkbcommon-x11-0 libfontconfig1 \
+            libxcursor1 libxrandr2 libxi6 libxinerama1 \
+            fontconfig 2>/dev/null || true
+    elif command -v dnf &> /dev/null; then
+        echo "==> Installing system dependencies (dnf)..."
+        sudo dnf install -y -q \
+            gcc gcc-c++ make curl file git \
+            mesa-libGL libxkbcommon-x11 fontconfig \
+            libXcursor libXrandr libXi libXinerama 2>/dev/null || true
+    fi
+
+    # Install Nerd Font (before Kitty so font is available)
+    if ! fc-list 2>/dev/null | grep -qi "iosevkaterm nerd font"; then
+        echo "==> Installing IosevkaTerm Nerd Font..."
+        mkdir -p ~/.local/share/fonts
+        FONT_TMP="$(mktemp -d)"
+        if curl -fL --progress-bar -o "$FONT_TMP/IosevkaTerm.tar.xz" \
+            https://github.com/ryanoasis/nerd-fonts/releases/latest/download/IosevkaTerm.tar.xz; then
+            tar -xf "$FONT_TMP/IosevkaTerm.tar.xz" -C ~/.local/share/fonts
+            fc-cache -f ~/.local/share/fonts 2>/dev/null || true
+            echo "==> Font installed. Verifying..."
+            if fc-list | grep -qi "iosevkaterm nerd font"; then
+                echo "==> IosevkaTerm Nerd Font verified OK"
+            else
+                echo "==> WARNING: Font installed but not detected by fc-list. May need terminal restart."
+            fi
+        else
+            echo "==> WARNING: Failed to download IosevkaTerm Nerd Font"
+        fi
+        rm -rf "$FONT_TMP"
+    fi
+
     # Install Kitty terminal
     if ! command -v kitty &> /dev/null; then
         echo "==> Installing Kitty terminal..."
-        curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n
-        mkdir -p ~/.local/bin
-        ln -sf ~/.local/kitty.app/bin/kitty ~/.local/bin/
-        ln -sf ~/.local/kitty.app/bin/kitten ~/.local/bin/
-        # Desktop integration
-        mkdir -p ~/.local/share/applications
-        cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
-        sed -i "s|Icon=kitty|Icon=$HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty.desktop
-    fi
-
-    # Install Nerd Font
-    if ! fc-list | grep -qi "iosevka"; then
-        echo "==> Installing IosevkaTerm Nerd Font..."
-        mkdir -p ~/.local/share/fonts
-        cd /tmp
-        curl -fLO https://github.com/ryanoasis/nerd-fonts/releases/latest/download/IosevkaTerm.tar.xz
-        tar -xf IosevkaTerm.tar.xz -C ~/.local/share/fonts
-        fc-cache -fv || true  # May fail on some systems, but font is installed
-        cd -
+        if curl -fL https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin launch=n; then
+            mkdir -p ~/.local/bin
+            ln -sf ~/.local/kitty.app/bin/kitty ~/.local/bin/
+            ln -sf ~/.local/kitty.app/bin/kitten ~/.local/bin/
+            # Desktop integration
+            mkdir -p ~/.local/share/applications
+            if [ -f ~/.local/kitty.app/share/applications/kitty.desktop ]; then
+                cp ~/.local/kitty.app/share/applications/kitty.desktop ~/.local/share/applications/
+                sed -i "s|Icon=kitty|Icon=$HOME/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty.desktop
+            fi
+            echo "==> Kitty installed successfully"
+        else
+            echo "==> WARNING: Kitty installation failed. You can install it manually later:"
+            echo "    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin"
+        fi
     fi
 fi
 
@@ -64,25 +98,10 @@ fi
 echo "==> Applying dotfiles..."
 chezmoi init --apply "https://github.com/dpcrespo/dotfiles.git"
 
-# 5. Configure Fish as default shell
-FISH_PATH="$(which fish)"
-if [ -n "$FISH_PATH" ]; then
-    if ! grep -q "$FISH_PATH" /etc/shells; then
-        echo "==> Adding fish to /etc/shells..."
-        echo "$FISH_PATH" | sudo tee -a /etc/shells
-    fi
-
-    if [ "$SHELL" != "$FISH_PATH" ]; then
-        echo "==> Setting fish as default shell..."
-        chsh -s "$FISH_PATH"
-    fi
-fi
-
 echo ""
 echo "==> Bootstrap complete!"
-echo "==> Please restart your terminal or run: exec fish"
+echo "==> Please restart your terminal"
 echo ""
 echo "==> Next steps:"
 echo "   1. Set up your NPM token: echo 'your-token' > ~/.npm_token"
-echo "   2. Configure your Git email when prompted by chezmoi"
-echo "   3. Open Neovim to install plugins: nvim"
+echo "   2. Open Neovim to install plugins: nvim"

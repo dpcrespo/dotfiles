@@ -74,10 +74,15 @@ if command -v npm &> /dev/null; then
     npm install -g @fsouza/prettierd
     npm install -g eslint_d
     npm install -g vscode-langservers-extracted
+    npm install -g stylelint
+{{ if .install_php }}
+    echo "==> Installing PHP-related npm packages..."
+    npm install -g blade-formatter
+{{ end }}
 else
     echo "==> npm not found, skipping LSP installation"
     echo "    Run this manually after installing Node.js:"
-    echo "    npm install -g typescript typescript-language-server @fsouza/prettierd eslint_d vscode-langservers-extracted"
+    echo "    npm install -g typescript typescript-language-server @fsouza/prettierd eslint_d vscode-langservers-extracted stylelint"
 fi
 
 echo "==> Node.js setup complete!"

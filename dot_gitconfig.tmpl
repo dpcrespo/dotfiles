@@ -1,5 +1,5 @@
 [user]
-	name = Daniel Pérez
+	name = {{ .git_name }}
 	email = {{ .email }}
 [alias]
 	st = status -sb
@@ -16,6 +16,6 @@
 	br = branch --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(contents:subject) %(color:green)(%(committerdate:relative)) [%(authorname)]' --sort=-committerdate
 	undo = reset HEAD~1 --mixed
 	res = !git reset --hard
-	ac = git add -A && git comit -m
+	ac = git add -A && git commit -m
 [help]
 	autocorrect = 20

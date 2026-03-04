@@ -32,6 +32,7 @@ brew "delta"          # Diff mejorado
 brew "neovim"
 brew "tree-sitter"    # Parser para syntax
 brew "luarocks"       # Lua dependencies
+brew "gcc"            # Treesitter grammar compilation
 
 # ══════════════════════════════════════════
 # FORMATTERS Y LINTERS (Neovim deps)
@@ -58,8 +59,22 @@ brew "yq"             # YAML processor
 brew "curl"           # HTTP client
 brew "wget"           # Descargas
 brew "htop"           # Monitor de procesos
-brew "lazydocker"     # Docker TUI
 brew "direnv"         # Env por directorio
+
+{{ if .install_docker -}}
+# ══════════════════════════════════════════
+# DOCKER
+# ══════════════════════════════════════════
+brew "lazydocker"     # Docker TUI
+{{ end -}}
+
+{{ if .install_php -}}
+# ══════════════════════════════════════════
+# PHP
+# ══════════════════════════════════════════
+brew "composer"       # PHP dependency manager
+brew "php-cs-fixer"   # PHP code formatter
+{{ end -}}
 
 # ══════════════════════════════════════════
 # macOS ONLY
@@ -67,5 +82,7 @@ brew "direnv"         # Env por directorio
 if OS.mac?
   cask "kitty"
   cask "font-iosevka-term-nerd-font"
+{{ if .install_docker -}}
   cask "docker"
+{{ end -}}
 end
