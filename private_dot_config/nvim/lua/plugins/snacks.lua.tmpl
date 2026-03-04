@@ -47,6 +47,14 @@ return {
 			end,
 			desc = "Snacks: Lazygit",
 		},
+		-- lazydocker
+		{
+			"<leader>ld",
+			function()
+				Snacks.terminal("lazydocker", { cwd = vim.fn.getcwd() })
+			end,
+			desc = "Snacks: Lazydocker",
+		},
 		-- Top Pickers & Explorer
 		{
 			"<leader><space>",
