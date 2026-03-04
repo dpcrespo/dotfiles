@@ -58,6 +58,12 @@ case "$NODE_MANAGER" in
 
         # Install yarn globally
         npm install -g yarn
+
+        # Install bass for fish (allows sourcing bash scripts like nvm.sh)
+        if command -v fish &> /dev/null; then
+            echo "==> Installing bass for fish+nvm integration..."
+            fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install edc/bass" 2>/dev/null || true
+        fi
         ;;
 
     none)

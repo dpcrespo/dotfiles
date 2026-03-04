@@ -1,3 +1,6 @@
+{{ if not .install_php -}}
+return {}
+{{ else -}}
 return {
   -- DAP for PHP/Xdebug
   {
@@ -159,3 +162,4 @@ return {
     end,
   },
 }
+{{ end -}}

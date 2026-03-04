@@ -47,6 +47,10 @@ if type -q starship
     starship init fish | source
 end
 
+if type -q direnv
+    direnv hook fish | source
+end
+
 # Node version manager
 {{ if eq .node_manager "mise" -}}
 if type -q mise
@@ -56,12 +60,20 @@ end
 set -gx VOLTA_HOME "$HOME/.volta"
 fish_add_path $VOLTA_HOME/bin
 {{- else if eq .node_manager "nvm" -}}
-# nvm for fish - using bass or nvm.fish
+# nvm for fish
 if test -d "$HOME/.nvm"
     set -gx NVM_DIR "$HOME/.nvm"
-    # Load nvm if bass is available (allows running bash scripts)
+    # Load nvm via bass (allows running bash scripts in fish)
     if type -q bass
         bass source "$NVM_DIR/nvm.sh"
+    else
+        # Fallback: add nvm default bin to PATH directly
+        if test -d "$NVM_DIR/alias/default"
+            set -l default_version (cat "$NVM_DIR/alias/default" 2>/dev/null)
+            if test -n "$default_version"; and test -d "$NVM_DIR/versions/node/v$default_version/bin"
+                fish_add_path "$NVM_DIR/versions/node/v$default_version/bin"
+            end
+        end
     end
 end
 {{- end }}

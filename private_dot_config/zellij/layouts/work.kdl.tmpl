@@ -7,10 +7,11 @@ layout {
         pane
     }
 
+{{ if .install_docker -}}
     tab name="docker" {
         pane command="lazydocker" borderless=true
     }
-
+{{ end }}
     default_tab_template {
         pane size=1 borderless=true {
             plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {

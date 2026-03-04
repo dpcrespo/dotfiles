@@ -1,3 +1,10 @@
+# Repo files - not dotfiles
+install.sh
+uninstall.sh
+Brewfile.tmpl
+README.md
+LICENSE
+
 # Secrets - NEVER in the repo
 .npm_token
 .envrc

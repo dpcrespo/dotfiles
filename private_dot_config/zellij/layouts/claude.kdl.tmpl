@@ -18,7 +18,9 @@ layout {
     tab name="git" {
         pane name="lazygit" command="lazygit"
     }
+{{ if .install_docker -}}
     tab name="docker" {
         pane name="lazydocker" command="lazydocker"
     }
+{{ end -}}
 }

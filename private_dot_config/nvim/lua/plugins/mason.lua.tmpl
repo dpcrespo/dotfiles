@@ -10,10 +10,12 @@ return {
       "prettier",
       "lua-language-server",
       "json-lsp",
+{{ if .install_php -}}
       "intelephense",
       "phpactor",
       "php-debug-adapter",
       "phpstan",
+{{ end -}}
     },
   },
 }
