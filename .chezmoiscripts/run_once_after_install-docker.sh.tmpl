@@ -15,4 +15,7 @@ sudo usermod -aG docker {{ .chezmoi.username }}
 
 echo "==> Docker installed successfully!"
 echo "==> NOTE: Log out and back in for docker group to take effect"
+{{ else -}}
+#!/bin/bash
+exit 0
 {{ end -}}
