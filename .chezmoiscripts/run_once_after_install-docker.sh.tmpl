@@ -1,7 +1,6 @@
 {{ if and .install_docker (eq .chezmoi.os "linux") -}}
 #!/bin/bash
 set -e
-# config hash: {{ .install_docker | toString | sha256sum }}
 
 if command -v docker &> /dev/null; then
     echo "==> Docker already installed, skipping"
