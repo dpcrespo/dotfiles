@@ -1,6 +1,7 @@
 {{ if .install_fish -}}
 #!/bin/bash
 set -e
+# config hash: {{ .install_fish | toString | sha256sum }}
 
 echo "==> Configuring Fish as default shell..."
 

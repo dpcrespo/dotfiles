@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Brewfile hash: {{ include "Brewfile.tmpl" | sha256sum }}
+# Brewfile hash: {{ include "dot_Brewfile.tmpl" | sha256sum }}
 
 echo "==> Installing packages via Homebrew..."
 
@@ -26,13 +26,7 @@ fi
 # Ensure brew is in PATH
 eval "$($HOMEBREW_PREFIX/bin/brew shellenv)"
 
-# Render Brewfile template and install packages
-BREWFILE_TMP="$(mktemp)"
-cat > "$BREWFILE_TMP" << 'BREWFILE_EOF'
-{{ include "Brewfile.tmpl" }}
-BREWFILE_EOF
-
-brew bundle --file="$BREWFILE_TMP"
-rm -f "$BREWFILE_TMP"
+# Use the Brewfile already processed by chezmoi
+brew bundle --global
 
 echo "==> Packages installed successfully!"
