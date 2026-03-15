@@ -76,13 +76,13 @@ brew "composer"       # PHP dependency manager
 brew "php-cs-fixer"   # PHP code formatter
 {{ end -}}
 
+{{ if eq .chezmoi.os "darwin" -}}
 # ══════════════════════════════════════════
-# macOS ONLY
+# macOS ONLY (casks)
 # ══════════════════════════════════════════
-if OS.mac?
-  cask "kitty"
-  cask "font-iosevka-term-nerd-font"
+cask "kitty"
+cask "font-iosevka-term-nerd-font"
 {{ if .install_docker -}}
-  cask "docker"
+cask "docker"
 {{ end -}}
-end
+{{ end -}}
