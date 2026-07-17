@@ -143,6 +143,8 @@ keybinds clear-defaults=true {
         bind "Alt 3" { GoToTab 3; }
         bind "Alt 4" { GoToTab 4; }
         bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
     }
     shared_except "scroll" {
         bind "Alt left" { MoveFocusOrTab "left"; }
@@ -363,8 +365,8 @@ pane_frames false
 //   - detach (Default)
 //   - quit
 // 
-// on_force_close "quit"
- 
+on_force_close "detach"
+
 // Configure the scroll back buffer size
 // This is the number of lines zellij stores for each pane in the scroll back
 // buffer. Excess number of lines are discarded in a FIFO fashion.

@@ -9,7 +9,9 @@ layout {
     tab name="work" focus=true {
         pane split_direction="vertical" {
             pane size="65%" name="nvim" focus=true command="nvim"
-            pane size="35%" name="claude" command="claude"
+            pane size="35%" name="claude" command="fish" {
+                args "-c" "claude --continue; or claude"
+            }
         }
     }
     tab name="term" {
@@ -18,9 +20,22 @@ layout {
     tab name="git" {
         pane name="lazygit" command="lazygit"
     }
-{{ if .install_docker -}}
+{{- if .install_docker }}
     tab name="docker" {
         pane name="lazydocker" command="lazydocker"
     }
-{{ end -}}
+{{- end }}
+    tab name="redis" {
+        pane name="iredis" command="iredis" {
+            args "-h" "127.0.0.1" "-p" "6379"
+        }
+    }
+    tab name="sql" {
+        pane name="mycli" command="mycli" {
+            args "mysql://feeds:feeds@127.0.0.1:3326/feeds"
+        }
+    }
+    tab name="k9s" {
+        pane name="k9s" command="k9s"
+    }
 }
