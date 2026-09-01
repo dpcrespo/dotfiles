@@ -1,3 +1,7 @@
+// Panes marked start_suspended=true no arrancan su comando hasta pulsar Enter
+// dentro del pane. Evita errores de conexion al abrir proyectos que no tienen
+// redis / base de datos / cluster (p.ej. librerias frontend), o cuyos
+// contenedores todavia no estan levantados.
 layout {
     default_tab_template {
         pane size=1 borderless=true {
@@ -26,14 +30,14 @@ layout {
     }
 {{- end }}
     tab name="redis" {
-        pane name="iredis" command="iredis" {
+        pane name="iredis" command="iredis" start_suspended=true {
             args "-h" "127.0.0.1" "-p" "6379"
         }
     }
     tab name="sql" {
-        pane name="lazysql" command="lazysql"
+        pane name="lazysql" command="lazysql" start_suspended=true
     }
     tab name="k9s" {
-        pane name="k9s" command="k9s"
+        pane name="k9s" command="k9s" start_suspended=true
     }
 }
