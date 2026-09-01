@@ -54,11 +54,29 @@ function workon --description "Project sessionizer - switch between projects wit
         # Outside zellij - check for existing session or create new
         set -l session_name $project_name
 
-        # Check if session exists
-        if command zellij list-sessions -s 2>/dev/null | string match -rq "^$session_name\$"
-            echo "Attaching to existing session: $session_name"
-            command zellij attach $session_name
+        # Use formatted output (-n) so we can tell a live session apart from a
+        # dead one. A dead session (server killed by a crash/reboot) is shown as
+        # "(EXITED - attach to resurrect)". Attaching to it brings back blank
+        # panes with just a blinking cursor, so recreate it cleanly instead.
+        set -l session_line (command zellij list-sessions -n 2>/dev/null | string match -r "^$session_name ")
+
+        if test -n "$session_line"
+            if string match -qr 'EXITED' -- "$session_line"
+                echo "Found dead session '$session_name' - recreating clean layout"
+                command zellij delete-session $session_name --force 2>/dev/null
+                cd $project_path
+                command zellij --layout claude options --session-name $session_name
+            else
+                echo "Attaching to live session: $session_name"
+                command zellij attach $session_name
+            end
         else
+            # A session whose metadata file was truncated (server killed
+            # mid-write) is invisible to list-sessions, but creation still
+            # rejects the name with "already exists, but is dead". Nothing is
+            # resurrectable in that state, so clear it before creating.
+            command zellij delete-session $session_name --force 2>/dev/null
+
             echo "Creating new session: $session_name with layout: claude"
             cd $project_path
             command zellij --layout claude options --session-name $session_name
