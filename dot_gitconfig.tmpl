@@ -30,3 +30,16 @@
 	conflictstyle = zdiff3
 [help]
 	autocorrect = 20
+{{- $gh := lookPath "gh" }}
+{{- if $gh }}
+{{/* gh guarda el token en el keyring; este helper deja que git lo use para
+     push/pull por HTTPS sin pedir usuario ni contrasena. Equivale a lo que
+     escribe `gh auth setup-git`, pero versionado. El `helper =` vacio resetea
+     helpers heredados de otros ambitos. */}}
+[credential "https://github.com"]
+	helper =
+	helper = !{{ $gh }} auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !{{ $gh }} auth git-credential
+{{- end }}
