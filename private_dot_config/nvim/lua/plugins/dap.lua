@@ -1,3 +1,34 @@
+-- Default Xdebug path mapping when a project declares nothing of its own.
+local DEFAULT_CONTAINER_PATH = "/var/www/html"
+
+-- Answers to the container-path prompt, keyed by workspace root, so you only
+-- get asked once per project per Neovim session.
+local php_path_cache = {}
+
+local function workspace_root()
+  return vim.fs.root(0, { ".git", "composer.json" }) or vim.fn.getcwd()
+end
+
+local function php_config(container_path)
+  return {
+    {
+      type = "php",
+      request = "launch",
+      name = "Listen for Xdebug",
+      port = 9003,
+      pathMappings = {
+        [container_path] = "${workspaceFolder}",
+      },
+    },
+  }
+end
+
+local function start_php_debug(dap, container_path)
+  dap.configurations.php = php_config(container_path)
+  dap.continue()
+  vim.notify("Debug started: listening on :9003 (" .. container_path .. ")", vim.log.levels.INFO)
+end
+
 local function toggle_debug()
   local dap = require("dap")
   if dap.session() then
@@ -7,28 +38,31 @@ local function toggle_debug()
     return
   end
 
-  local ft = vim.bo.filetype
-  if ft == "php" then
-    local default_path = "/var/www/html"
-    vim.ui.input({ prompt = "Docker container path: ", default = default_path }, function(input)
-      if not input or input == "" then return end
-      dap.configurations.php = {
-        {
-          type = "php",
-          request = "launch",
-          name = "Listen for Xdebug",
-          port = 9003,
-          pathMappings = {
-            [input] = "${workspaceFolder}",
-          },
-        },
-      }
-      dap.continue()
-      vim.notify("Debug started: listening on :9003", vim.log.levels.INFO)
-    end)
-  else
+  if vim.bo.filetype ~= "php" then
     dap.continue()
+    return
   end
+
+  local root = workspace_root()
+
+  -- A project shipping its own .vscode/launch.json owns its path mapping;
+  -- load_launchjs() already read it, so don't ask and don't overwrite.
+  if vim.fn.filereadable(root .. "/.vscode/launch.json") == 1 then
+    dap.continue()
+    return
+  end
+
+  local cached = php_path_cache[root]
+  if cached then
+    start_php_debug(dap, cached)
+    return
+  end
+
+  vim.ui.input({ prompt = "Xdebug container path: ", default = DEFAULT_CONTAINER_PATH }, function(input)
+    if not input or input == "" then return end
+    php_path_cache[root] = input
+    start_php_debug(dap, input)
+  end)
 end
 
 return {
@@ -79,17 +113,7 @@ return {
         args = { vim.fn.stdpath("data") .. "/mason/packages/php-debug-adapter/extension/out/phpDebug.js" },
       }
 
-      dap.configurations.php = {
-        {
-          type = "php",
-          request = "launch",
-          name = "Listen for Xdebug",
-          port = 9003,
-          pathMappings = {
-            ["/var/www/html"] = "${workspaceFolder}",
-          },
-        },
-      }
+      dap.configurations.php = php_config(DEFAULT_CONTAINER_PATH)
 
       -- JS/TS (Node)
       for _, language in ipairs({ "typescript", "javascript" }) do
@@ -119,6 +143,12 @@ return {
           },
         }
       end
+
+      -- Per-project overrides: a repo's own .vscode/launch.json wins over the
+      -- defaults above. This is where a project path like /data/feeds belongs.
+      pcall(function()
+        require("dap.ext.vscode").load_launchjs(nil, { php = { "php" } })
+      end)
     end,
   },
 }
