@@ -80,7 +80,7 @@ return {
       },
       {
         "microsoft/vscode-js-debug",
-        build = "npm install --legacy-peer-deps --ignore-scripts && npx gulp compile vsDebugServerBundle:webpack-bundle && mkdir -p out && cp -r dist/* out/",
+        build = "npm install --legacy-peer-deps --ignore-scripts && npx gulp compile vsDebugServerBundle:webpack-bundle && mkdir -p out && cp -r dist/* out/ && git checkout -- package-lock.json",
       },
     },
     keys = {
