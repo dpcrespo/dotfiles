@@ -61,19 +61,21 @@ brew "wget"           # Descargas
 brew "htop"           # Monitor de procesos
 brew "direnv"         # Env por directorio
 
+# ══════════════════════════════════════════
+# BASES DE DATOS Y CLUSTER
+# Los abre el layout "claude" de zellij (tabs sql / redis / k9s)
+# Las conexiones de lazysql viven en ~/.config/lazysql/config.toml (fuera del repo)
+# ══════════════════════════════════════════
+brew "lazysql"        # TUI multi-conexion para MySQL/Postgres/SQLite
+brew "mycli"          # Cliente MySQL con autocompletado (REPL, complementa lazysql)
+brew "iredis"         # Cliente Redis con autocompletado
+brew "k9s"            # TUI de Kubernetes
+
 {{ if .install_docker -}}
 # ══════════════════════════════════════════
 # DOCKER
 # ══════════════════════════════════════════
 brew "lazydocker"     # Docker TUI
-
-# ══════════════════════════════════════════
-# BASES DE DATOS Y CLUSTER
-# Los abre el layout "claude" de zellij (tabs sql / redis / k9s)
-# ══════════════════════════════════════════
-brew "mycli"          # Cliente MySQL con autocompletado
-brew "iredis"         # Cliente Redis con autocompletado
-brew "k9s"            # TUI de Kubernetes
 {{ end -}}
 
 {{ if .install_php -}}
