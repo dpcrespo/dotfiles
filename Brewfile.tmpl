@@ -66,12 +66,21 @@ brew "direnv"         # Env por directorio
 # DOCKER
 # ══════════════════════════════════════════
 brew "lazydocker"     # Docker TUI
+
+# ══════════════════════════════════════════
+# BASES DE DATOS Y CLUSTER
+# Los abre el layout "claude" de zellij (tabs sql / redis / k9s)
+# ══════════════════════════════════════════
+brew "mycli"          # Cliente MySQL con autocompletado
+brew "iredis"         # Cliente Redis con autocompletado
+brew "k9s"            # TUI de Kubernetes
 {{ end -}}
 
 {{ if .install_php -}}
 # ══════════════════════════════════════════
 # PHP
 # ══════════════════════════════════════════
+brew "php"            # Runtime PHP en el host (composer, phpactor, php-cs-fixer)
 brew "composer"       # PHP dependency manager
 brew "php-cs-fixer"   # PHP code formatter
 {{ end -}}
