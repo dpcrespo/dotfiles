@@ -30,11 +30,13 @@ layout {
             args "-h" "127.0.0.1" "-p" "6379"
         }
     }
+{{- if .dev_mysql_dsn }}
     tab name="sql" {
         pane name="mycli" command="mycli" {
-            args "mysql://feeds:feeds@127.0.0.1:3326/feeds"
+            args "{{ .dev_mysql_dsn }}"
         }
     }
+{{- end }}
     tab name="k9s" {
         pane name="k9s" command="k9s"
     }

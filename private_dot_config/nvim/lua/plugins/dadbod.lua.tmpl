@@ -1,0 +1,43 @@
+return {
+  {
+    "tpope/vim-dadbod",
+    cmd = { "DB", "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
+    dependencies = {
+      "kristijanhusak/vim-dadbod-ui",
+      "kristijanhusak/vim-dadbod-completion",
+    },
+    init = function()
+      vim.g.db_ui_use_nerd_fonts = 1
+      vim.g.db_ui_show_database_icon = 1
+      vim.g.db_ui_win_position = "left"
+      vim.g.db_ui_winwidth = 40
+{{- if .dev_mysql_dsn }}
+      vim.g.dbs = {
+        dev = "{{ .dev_mysql_dsn }}",
+      }
+{{- end }}
+
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "sql", "mysql", "plsql" },
+        callback = function()
+          vim.opt_local.omnifunc = "vim_dadbod_completion#omni"
+          vim.opt_local.commentstring = "-- %s"
+        end,
+      })
+    end,
+    keys = {
+      { "<leader>D", "<cmd>DBUIToggle<cr>", desc = "Toggle Database UI" },
+      { "<leader>Df", "<cmd>DBUIFindBuffer<cr>", desc = "Find DB buffer" },
+      { "<leader>Dr", "<cmd>DBUIRenameBuffer<cr>", desc = "Rename DB buffer" },
+    },
+  },
+  {
+    "folke/which-key.nvim",
+    optional = true,
+    opts = {
+      spec = {
+        { "<leader>D", group = "Database", icon = "" },
+      },
+    },
+  },
+}
