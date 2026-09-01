@@ -8,7 +8,7 @@
 {{- $install_docker := promptBoolOnce . "install_docker" "Install Docker tools (lazydocker, Docker Desktop on macOS)" false -}}
 {{- $install_fish := promptBoolOnce . "install_fish" "Set Fish as default shell" true -}}
 {{/* Kept out of the (public) repo: the answer lives only in ~/.config/chezmoi/chezmoi.toml */}}
-{{- $dev_mysql_dsn := promptStringOnce . "dev_mysql_dsn" "Local dev MySQL DSN for mycli/dadbod (blank to skip)" "" -}}
+{{- $dev_mysql_dsn := promptStringOnce . "dev_mysql_dsn" "Local dev MySQL DSN for nvim dadbod (blank to skip)" "" -}}
 
 [data]
     git_name = {{ $git_name | quote }}

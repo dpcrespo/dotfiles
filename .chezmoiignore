@@ -7,6 +7,7 @@ LICENSE
 
 # Secrets - NEVER in the repo
 .npm_token
+.config/lazysql/config.toml
 .envrc
 *.key
 *.pem

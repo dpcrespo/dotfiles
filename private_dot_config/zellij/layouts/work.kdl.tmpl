@@ -6,6 +6,10 @@ layout {
     tab name="shell" {
         pane
     }
+
+    tab name="sql" {
+        pane command="lazysql" borderless=true
+    }
 {{- if .install_docker }}
 
     tab name="docker" {

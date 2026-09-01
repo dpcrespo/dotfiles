@@ -30,13 +30,9 @@ layout {
             args "-h" "127.0.0.1" "-p" "6379"
         }
     }
-{{- if .dev_mysql_dsn }}
     tab name="sql" {
-        pane name="mycli" command="mycli" {
-            args "{{ .dev_mysql_dsn }}"
-        }
+        pane name="lazysql" command="lazysql"
     }
-{{- end }}
     tab name="k9s" {
         pane name="k9s" command="k9s"
     }
