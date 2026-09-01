@@ -1,0 +1,12 @@
+_ide_helper.php
+_ide_helper_models.php
+_ide_helper_models.json
+.phpstorm.meta.php
+.php-cs-fixer.cache
+.phpunit.result.cache
+.phpactor.json
+phpstan-strict.neon
+.agents/
+.claude/settings.local.json
+.claude/skills/
+mise.toml

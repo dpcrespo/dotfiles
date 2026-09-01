@@ -19,6 +19,7 @@
 	ac = !git add -A && git commit -m
 [core]
 	pager = delta
+	excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
 [interactive]
 	diffFilter = delta --color-only
 [delta]

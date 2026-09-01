@@ -54,7 +54,16 @@
       "Bash(git revert:*)",
       "Bash(curl:*)",
       "Bash(brew search:*)",
-      "WebFetch(domain:gist.github.com)"
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:neovim.getkulala.net)",
+      "Bash(cd ~/.local/share/chezmoi/.chezmoiscripts && mv run_once_after_02-install-docker.sh.tmpl run_onchange_after_02-install-docker.sh.tmpl && mv run_once_after_03-setup-node.sh.tmpl run_onchange_after_03-setup-node.sh.tmpl && mv run_once_after_04-setup-fish.sh.tmpl run_onchange_after_04-setup-fish.sh.tmpl)",
+      "Read(//home/dan/.config/fish/**)",
+      "Read(//home/dan/**)",
+      "Read(//home/dan/.config/fish/functions/**)",
+      "mcp__jira__jira_get_issue",
+      "mcp__jira__jira_get_issue_links",
+      "mcp__gitlab__gitlab_get_merge_request",
+      "mcp__gitlab__gitlab_get_merge_request_changes"
     ]
   }
 }
