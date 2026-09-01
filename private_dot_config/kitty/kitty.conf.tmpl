@@ -1,13 +1,6 @@
-# Shell configuration - use Homebrew path
-{{ if eq .chezmoi.os "darwin" -}}
-{{ if eq .chezmoi.arch "arm64" -}}
-shell /opt/homebrew/bin/fish
-{{- else -}}
-shell /usr/local/bin/fish
-{{- end }}
-{{- else -}}
-shell /home/linuxbrew/.linuxbrew/bin/fish
-{{- end }}
+# Shell configuration - resolved at apply time, not hardcoded per OS.
+# Re-run `chezmoi apply` if you later install fish somewhere else (e.g. Homebrew).
+shell {{ lookPath "fish" | default "/usr/bin/fish" }}
 
 include ./kanagawa.conf
 

@@ -4,10 +4,10 @@ vim.lsp.enable({
   "eslint_lsp",
   "stylelint_lsp",
   "jsonls",
-{{ if .install_php -}}
+{{- if .install_php }}
   "intelephense",
   "phpactor",
-{{ end -}}
+{{- end }}
 })
 
 vim.diagnostic.config({
