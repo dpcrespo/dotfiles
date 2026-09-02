@@ -25,9 +25,9 @@ case "$NODE_MANAGER" in
 
         echo "==> Installing Node.js and Yarn with mise..."
         eval "$(mise activate bash)"
-        mise install node@20.9.0
+        mise install node@24.14.0
         mise install yarn@latest
-        mise use --global node@20.9.0
+        mise use --global node@24.14.0
         mise use --global yarn@latest
         ;;
 
@@ -39,7 +39,7 @@ case "$NODE_MANAGER" in
         export PATH="$VOLTA_HOME/bin:$PATH"
 
         echo "==> Installing Node.js and Yarn with Volta..."
-        volta install node@20
+        volta install node@24
         volta install yarn
         ;;
 
