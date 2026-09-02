@@ -157,3 +157,48 @@ vim.api.nvim_create_autocmd("LspAttach", {
 --         end
 --     end,
 -- })
+
+-- Keep the chezmoi source in sync with lazy.nvim's lockfile.
+--
+-- lazy rewrites lazy-lock.json on every install/update/clean, which left the
+-- dotfiles source behind and tripped the drift warning in the shell. Syncing
+-- here means the lockfile still pins plugin versions across machines without
+-- anyone having to remember `chezmoi add`.
+local LOCKFILE_COMMIT_MESSAGE = "chore(nvim): update lazy-lock.json"
+
+local function chezmoi_capture(cmd)
+    local result = vim.system(cmd, { text = true }):wait()
+    if result.code ~= 0 then return nil end
+
+    return vim.trim(result.stdout or "")
+end
+
+local function sync_lazy_lock()
+    if vim.fn.executable("chezmoi") == 0 then return end
+
+    local lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json"
+    if vim.fn.filereadable(lockfile) == 0 then return end
+    if not chezmoi_capture({ "chezmoi", "add", lockfile }) then return end
+
+    local sourceRoot = chezmoi_capture({ "chezmoi", "source-path" })
+    local sourceFile = chezmoi_capture({ "chezmoi", "source-path", lockfile })
+    if not sourceRoot or not sourceFile then return end
+
+    if not chezmoi_capture({ "git", "-C", sourceRoot, "add", "--", sourceFile }) then return end
+
+    -- Non-zero here means there was nothing to commit, so there is nothing to push.
+    local commit = { "git", "-C", sourceRoot, "commit", "-m", LOCKFILE_COMMIT_MESSAGE, "--", sourceFile }
+    if not chezmoi_capture(commit) then return end
+
+    -- Pushing can block on the network; a failure just leaves the commit for
+    -- the drift check to report as unpushed.
+    vim.system({ "git", "-C", sourceRoot, "push" })
+end
+
+vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("chezmoi-lazy-lock", { clear = true }),
+    pattern = { "LazyInstall", "LazyUpdate", "LazySync", "LazyClean", "LazyRestore" },
+    callback = function()
+        vim.schedule(sync_lazy_lock)
+    end,
+})
