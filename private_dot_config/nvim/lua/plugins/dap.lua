@@ -46,8 +46,9 @@ local function toggle_debug()
   local root = workspace_root()
 
   -- A project shipping its own .vscode/launch.json owns its path mapping;
-  -- load_launchjs() already read it, so don't ask and don't overwrite.
+  -- nvim-dap reads it on demand, so drop the defaults and don't ask.
   if vim.fn.filereadable(root .. "/.vscode/launch.json") == 1 then
+    dap.configurations.php = {}
     dap.continue()
     return
   end
@@ -143,12 +144,6 @@ return {
           },
         }
       end
-
-      -- Per-project overrides: a repo's own .vscode/launch.json wins over the
-      -- defaults above. This is where a project path like /data/feeds belongs.
-      pcall(function()
-        require("dap.ext.vscode").load_launchjs(nil, { php = { "php" } })
-      end)
     end,
   },
 }
