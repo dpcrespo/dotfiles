@@ -14,7 +14,7 @@ LICENSE
 *credentials*
 *secret*
 
-# Git directories inside configs (e.g., nvim has its own repo)
+# Git directories inside configs (e.g. the catppuccin theme cloned under kitty)
 **/.git
 **/.git/**
 
