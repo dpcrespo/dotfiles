@@ -1,21 +1,30 @@
 return {
-  "williamboman/mason.nvim",
-  opts = {
-    ensure_installed = {
-      "typescript-language-server",
-      "eslint-lsp",
-      "eslint_d",
-      "stylelint-lsp",
-      "stylua",
-      "prettier",
-      "lua-language-server",
-      "json-lsp",
+  {
+    "williamboman/mason.nvim",
+    opts = {},
+  },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "typescript-language-server",
+        "eslint-lsp",
+        "eslint_d",
+        "stylelint-lsp",
+        "stylua",
+        "prettier",
+        "lua-language-server",
+        "json-lsp",
 {{- if .install_php }}
-      "intelephense",
-      "phpactor",
-      "php-debug-adapter",
-      "phpstan",
+        "intelephense",
+        "phpactor",
+        "php-debug-adapter",
+        "php-cs-fixer",
+        "phpstan",
 {{- end }}
+      },
+      run_on_start = true,
     },
   },
 }
