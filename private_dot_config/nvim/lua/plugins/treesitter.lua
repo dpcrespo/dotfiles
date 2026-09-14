@@ -1,14 +1,20 @@
 return {
   "nvim-treesitter/nvim-treesitter",
+  branch = "main",
+  commit = "2f5d4c3f3c675962242096bcc8e586d76dd72eb2",
   dependencies = {
-    "nvim-treesitter/nvim-treesitter-textobjects",
+    {
+      "nvim-treesitter/nvim-treesitter-textobjects",
+      branch = "main",
+      commit = "4e91b5d0394329a229725b021a8ea217099826ef",
+    },
   },
   build = ":TSUpdate",
   event = "VeryLazy",
   config = function()
     require("nvim-treesitter").setup()
 
-    local ensure = { "lua", "vim", "vimdoc", "query", "javascript", "typescript", "tsx", "scss", "css", "html", "json", "jsonc", "markdown", "markdown_inline", "yaml", "php", "php_only", "phpdoc" }
+    local ensure = { "lua", "vim", "vimdoc", "query", "javascript", "typescript", "tsx", "scss", "css", "html", "json", "markdown", "markdown_inline", "yaml", "php", "php_only", "phpdoc" }
     local installed = require("nvim-treesitter").get_installed()
     local installed_set = {}
     for _, l in ipairs(installed) do installed_set[l] = true end
@@ -20,14 +26,20 @@ return {
       require("nvim-treesitter").install(to_install)
     end
 
+    local max_filesize = 100 * 1024
+    local start_treesitter = function(buf)
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then return end
+      pcall(vim.treesitter.start, buf)
+    end
+
     vim.api.nvim_create_autocmd("FileType", {
-      callback = function(args)
-        local max_filesize = 100 * 1024
-        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(args.buf))
-        if ok and stats and stats.size > max_filesize then return end
-        pcall(vim.treesitter.start, args.buf)
-      end,
+      callback = function(args) start_treesitter(args.buf) end,
     })
+
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_loaded(buf) then start_treesitter(buf) end
+    end
 
     require("nvim-treesitter-textobjects").setup({
       select = {
