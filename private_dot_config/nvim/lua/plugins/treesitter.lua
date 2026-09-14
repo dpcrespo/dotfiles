@@ -14,7 +14,14 @@ return {
   config = function()
     require("nvim-treesitter").setup()
 
-    local ensure = { "lua", "vim", "vimdoc", "query", "javascript", "typescript", "tsx", "scss", "css", "html", "json", "markdown", "markdown_inline", "yaml", "php", "php_only", "phpdoc" }
+    require("nvim-treesitter.parsers").blade = {
+      install_info = {
+        url = "https://github.com/EmranMR/tree-sitter-blade",
+        revision = "b5291d1ba207a8ebb8383b2ecb8a8a6535210a50",
+      },
+    }
+
+    local ensure = { "lua", "vim", "vimdoc", "query", "javascript", "typescript", "tsx", "scss", "css", "html", "json", "markdown", "markdown_inline", "yaml", "php", "php_only", "phpdoc", "blade" }
     local installed = require("nvim-treesitter").get_installed()
     local installed_set = {}
     for _, l in ipairs(installed) do installed_set[l] = true end
