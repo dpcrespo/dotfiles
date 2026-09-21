@@ -1,0 +1,80 @@
+-- PKM: capturar en el diario de Obsidian sin salir de Neovim.
+-- Escribe en las ## Capturas de 40_DIARIO/<hoy>.md a través del script nota.
+
+local M = {}
+
+local SCRIPT = vim.fn.expand("~/.local/bin/nota")
+
+local function ejecutar(args)
+	if vim.fn.executable(SCRIPT) == 0 then
+		vim.notify("No encuentro el script: " .. SCRIPT, vim.log.levels.ERROR)
+		return nil
+	end
+	local cmd = { SCRIPT }
+	vim.list_extend(cmd, args or {})
+	local salida = vim.fn.system(cmd)
+	if vim.v.shell_error ~= 0 then
+		vim.notify("nota falló (" .. vim.v.shell_error .. "): " .. salida, vim.log.levels.ERROR)
+		return nil
+	end
+	return salida
+end
+
+local function capturar(texto)
+	texto = vim.trim(texto or "")
+	if texto == "" then
+		return
+	end
+	if ejecutar({ texto }) then
+		vim.notify("Capturado: " .. texto, vim.log.levels.INFO)
+	end
+end
+
+function M.hoy()
+	local fichero = vim.fn.expand("~/Documentos/PKM/40_DIARIO/") .. os.date("%Y-%m-%d") .. ".md"
+	vim.cmd("vsplit " .. vim.fn.fnameescape(fichero))
+end
+
+vim.api.nvim_create_user_command("Nota", function(opts)
+	capturar(opts.args)
+end, { nargs = "+", desc = "Capturar en el diario de hoy" })
+
+vim.keymap.set("n", "<leader>nn", function()
+	vim.ui.input({ prompt = "Captura: " }, capturar)
+end, { desc = "PKM: capturar una idea" })
+
+vim.keymap.set("v", "<leader>nn", function()
+	vim.cmd('normal! "vy')
+	capturar(vim.fn.getreg("v"))
+end, { desc = "PKM: capturar la selección" })
+
+vim.keymap.set("n", "<leader>nl", function()
+	local salida = ejecutar({})
+	if salida then
+		vim.notify(vim.trim(salida) ~= "" and salida or "Hoy no has capturado nada", vim.log.levels.INFO)
+	end
+end, { desc = "PKM: ver capturas de hoy" })
+
+vim.keymap.set("n", "<leader>no", M.hoy, { desc = "PKM: abrir la nota de hoy" })
+
+-- Evita machacar el diario con un buffer viejo: si el fichero cambia en disco
+-- (porque `nota` ha escrito desde otro sitio), Neovim lo recarga solo.
+local grupo = vim.api.nvim_create_augroup("PkmAutoread", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "CursorHold", "InsertLeave" }, {
+	group = grupo,
+	pattern = { "*/40_DIARIO/*.md" },
+	callback = function()
+		if vim.fn.mode() ~= "c" then
+			vim.cmd("checktime")
+		end
+	end,
+})
+vim.api.nvim_create_autocmd("BufReadPost", {
+	group = grupo,
+	pattern = { "*/40_DIARIO/*.md" },
+	callback = function()
+		vim.opt_local.autoread = true
+	end,
+})
+
+return M

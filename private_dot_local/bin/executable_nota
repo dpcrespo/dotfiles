@@ -1,0 +1,38 @@
+#!/bin/bash
+# Captura en las Capturas del diario de hoy.
+#   nota <texto>   -> añade la línea
+#   nota           -> lista lo capturado hoy
+# Guarda una copia previa en $PKM/.nota-backups antes de tocar el fichero.
+set -euo pipefail
+
+PKM="${PKM:-/home/dan/Documentos/PKM}"
+F="$PKM/40_DIARIO/$(date +%F).md"
+BK="$PKM/.nota-backups"
+
+[ -f "$F" ] || cp "$PKM/90_PLANTILLAS/Notas diarias.md" "$F"
+
+if [ $# -eq 0 ]; then
+  awk '/^## Capturas/{p=1;next} /^## Notas del día/{p=0} p' "$F" | grep -v '^[[:space:]]*$' | grep -v '^[[:space:]]*<!--' || true
+  exit 0
+fi
+
+mkdir -p "$BK"
+cp "$F" "$BK/$(date +%F_%H%M%S).md"
+find "$BK" -type f -mtime +14 -delete 2>/dev/null || true
+
+ANTES=$(wc -l < "$F")
+TMP=$(mktemp)
+awk -v linea="- $*" '
+  /^## Notas del día/ && !hecho { print linea; hecho=1 }
+  { print }
+' "$F" > "$TMP"
+
+DESPUES=$(wc -l < "$TMP")
+if [ "$DESPUES" -lt "$((ANTES + 1))" ]; then
+  rm -f "$TMP"
+  echo "ERROR: la escritura habría perdido líneas. Fichero intacto." >&2
+  exit 1
+fi
+
+cat "$TMP" > "$F" && rm -f "$TMP"
+echo "✓ capturado"
