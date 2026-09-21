@@ -12,9 +12,11 @@ layout {
 
     tab name="work" focus=true {
         pane split_direction="vertical" {
-            pane size="65%" name="nvim" focus=true command="nvim"
-            pane size="35%" name="claude" command="fish" {
-                args "-c" "claude --continue; or claude"
+            pane size="50%" name="nvim" focus=true command="fish" {
+                args "-c" "nvim; exec fish"
+            }
+            pane size="50%" name="claude" command="fish" {
+                args "-c" "claude --continue; or claude; exec fish"
             }
         }
     }
