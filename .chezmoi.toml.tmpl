@@ -4,6 +4,7 @@
 {{- $projects_dir := promptStringOnce . "projects_dir" "Projects directory" "~/projects" -}}
 {{- $node_manager := promptChoiceOnce . "node_manager" "Node version manager" (list "mise" "volta" "nvm" "none") -}}
 {{- $dashboard_brand := promptStringOnce . "dashboard_brand" "Neovim dashboard brand/name" "SPINBOO" -}}
+{{- $pkm_dir := promptStringOnce . "pkm_dir" "Obsidian PKM vault directory" "~/Documentos/PKM" -}}
 {{- $install_php := promptBoolOnce . "install_php" "Install PHP dev tools (composer)" false -}}
 {{- $install_docker := promptBoolOnce . "install_docker" "Install Docker tools (lazydocker, Docker Desktop on macOS)" false -}}
 {{- $install_fish := promptBoolOnce . "install_fish" "Set Fish as default shell" true -}}
@@ -17,6 +18,7 @@
     projects_dir = {{ $projects_dir | quote }}
     node_manager = {{ $node_manager | quote }}
     dashboard_brand = {{ $dashboard_brand | quote }}
+    pkm_dir = {{ $pkm_dir | quote }}
     install_php = {{ $install_php }}
     install_docker = {{ $install_docker }}
     install_fish = {{ $install_fish }}

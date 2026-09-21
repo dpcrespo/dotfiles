@@ -31,7 +31,7 @@ local function capturar(texto)
 end
 
 function M.hoy()
-	local fichero = vim.fn.expand("~/Documentos/PKM/40_DIARIO/") .. os.date("%Y-%m-%d") .. ".md"
+	local fichero = vim.fn.expand("{{ .pkm_dir }}/40_DIARIO/") .. os.date("%Y-%m-%d") .. ".md"
 	vim.cmd("vsplit " .. vim.fn.fnameescape(fichero))
 end
 

@@ -5,7 +5,10 @@
 # Guarda una copia previa en $PKM/.nota-backups antes de tocar el fichero.
 set -euo pipefail
 
-PKM="${PKM:-/home/dan/Documentos/PKM}"
+PKM="${PKM:-{{ .pkm_dir }}}"
+# El valor puede venir con ~ (del config de chezmoi o del entorno): bash no
+# lo expande dentro de una asignacion entrecomillada, asi que se hace aqui.
+PKM="${PKM/#\~/$HOME}"
 F="$PKM/40_DIARIO/$(date +%F).md"
 BK="$PKM/.nota-backups"
 
