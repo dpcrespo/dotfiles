@@ -25,9 +25,23 @@ find "$BK" -type f -mtime +14 -delete 2>/dev/null || true
 
 ANTES=$(wc -l < "$F")
 TMP=$(mktemp)
+# La captura va tras la ultima linea con contenido de Capturas, no pegada al
+# encabezado siguiente: las lineas en blanco del final se retienen y se sueltan
+# despues, de modo que las capturas quedan juntas y el encabezado conserva su
+# blanco delante. Si no habia ninguno se emite uno, que Markdown lo exige.
 awk -v linea="- $*" '
-  /^## Notas del día/ && !hecho { print linea; hecho=1 }
-  { print }
+  function soltar(  i) { for (i = 0; i < blancos; i++) print ""; blancos = 0 }
+  /^## Notas del día/ && !hecho {
+    print linea
+    if (blancos == 0) blancos = 1
+    soltar()
+    hecho = 1
+    print
+    next
+  }
+  /^[[:space:]]*$/ && !hecho { blancos++; next }
+  { soltar(); print }
+  END { soltar() }
 ' "$F" > "$TMP"
 
 DESPUES=$(wc -l < "$TMP")
