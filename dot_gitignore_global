@@ -10,3 +10,7 @@ phpstan-strict.neon
 .claude/settings.local.json
 .claude/skills/
 mise.toml
+
+# Credenciales locales de entorno de desarrollo (nunca al repo)
+*.local.sql
+credentials.local.*
